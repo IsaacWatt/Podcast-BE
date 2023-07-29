@@ -3,3 +3,5 @@ output/*
 **/__pycache__/
 podenv/
 demo/
+public_repos/
+terraform/

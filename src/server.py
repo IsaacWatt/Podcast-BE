@@ -72,6 +72,31 @@ def create_post():
     except NoCredentialsError:
         print("Credentials not available")
 
+@app.route('/generate/long', methods=['POST'])
+def create_post_long():
+    data = request.get_json()  # parse parameters from incoming request
+
+    topic = data.get('topic')  # get parameter called 'topic'
+    duration = data.get('duration')  # get parameter called 'duration'
+    tone = data.get('tone')  # get parameter called 'tone'
+    
+    transcript = gen_podcast.create_podcast(topic, duration, tone)
+
+    # Upload to S3
+    try:
+        ensure_bucket_exists('podcast-generator')
+        s3.upload_file('./output/speech.mp3', 'podcast-generator', 'speech.mp3')
+        print("Upload Successful")
+        url = s3.generate_presigned_url('get_object', Params={'Bucket': 'podcast-generator', 'Key': 'speech.mp3'}, ExpiresIn=3600)
+        print(url)
+
+        return jsonify({"url": url}), 200
+        
+    except FileNotFoundError:
+        print("The file was not found")
+    except NoCredentialsError:
+        print("Credentials not available")
+
 
     # return send_file('../output/speech.mp3', mimetype="audio/mp3"), 200
 
