@@ -184,4 +184,4 @@ if __name__ == '__main__':
     # topic = "Finding a girlfriend in the bay area as an Indian Software Engineer"
     # duration = 10
     
-    create_podcast_expensive(topic, duration, tone)
+    create_podcast(topic, duration, tone)
